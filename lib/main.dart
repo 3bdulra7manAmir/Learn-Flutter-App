@@ -1,55 +1,73 @@
 import 'package:flutter/material.dart';
+import 'package:taskn1/home_page.dart';
+import 'package:taskn1/profile_page.dart';
 
-void main() => runApp(const MyApp());
+void main()
+{
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget
 {
-  const MyApp({Key? key}) : super(key: key);
-// This widget is the root
-// of your application.
+  const MyApp ({Key? key}):super(key: key);
+
   @override
-  Widget build(BuildContext context)
-  {
-    return MaterialApp
+  Widget build(BuildContext context){
+    return  MaterialApp
       (
-        title: "Shadow Company",
-        theme: ThemeData(primarySwatch: Colors.brown),
-        debugShowCheckedModeBanner: false,
-        // home : new ListViewBuilder(), NO Need To Use Unnecessary New Keyword
-        home: const ListViewBuilder()
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData
+        (
+          primarySwatch: Colors.green
+        ),
+      home: const RootPage(),
       );
   }
 }
-
-const int itemNum = 20;
-
-class ListViewBuilder extends StatelessWidget
+class RootPage extends StatefulWidget
 {
-  const ListViewBuilder({Key? key}) : super(key: key);
-
+  const RootPage ({Key? key}) : super (key: key);
+  @override
+  State<RootPage> createState() => _RootPageState();
+}
+class _RootPageState extends State<RootPage>
+{
+  int currentPage = 0;
+  List<Widget> pages = const [HomePage(), ProfilePage()];
   @override
   Widget build(BuildContext context)
   {
     return Scaffold
-    (
-      appBar: AppBar(title: const Text("Shadow Company")),
-      body: ListView.builder
-    (
-          itemCount: itemNum,
-          itemBuilder: (BuildContext context, int index)
-    {
-            return ListTile
-            (
-                title: Text('Item ${(index + 1)}'),
-                leading: const Icon(Icons.tab),
-                trailing: const Icon(Icons.select_all),
-            onTap: ()
-    {
-      debugPrint('Item ${(index + 1)}} selected');
-    },
-            );
-    },
-    )
-    );
+      (
+      appBar: AppBar
+        (
+        title: const Text('my App'),
+        ),
+      body: pages[currentPage],
+      floatingActionButton: FloatingActionButton
+        (
+        onPressed: ()
+        {
+          debugPrint('Floating Action Button');
+        },
+        child: const Icon(Icons.add),
+        ),
+      bottomNavigationBar: NavigationBar
+        (
+        destinations: const
+        [
+          NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
+          NavigationDestination(icon: Icon(Icons.person), label: 'Profile'),
+        ],
+        onDestinationSelected: (int index)
+        {
+          setState(()
+          {
+            currentPage = index;
+          });
+        },
+        selectedIndex: currentPage,
+        ),
+      );
   }
 }
